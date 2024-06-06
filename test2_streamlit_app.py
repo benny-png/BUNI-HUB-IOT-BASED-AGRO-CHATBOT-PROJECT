@@ -5,7 +5,7 @@ import time
 import streamlit as st
 
 # Define your OpenAI API key
-openai_api_key = 'sk-proj-6ScOHbPPm8ZXZXknyqb3T3BlbkFJfhsHDurVorriE4giZj5q'
+openai_api_key = 'sk-proj-UlfFvIPDFNldmmYSuZZFT3BlbkFJHuMKJVZJjfXEIJMvVslF'
 
 # Function to send sensor data to OpenAI API and get a response
 def get_openai_response(sensor_data, crop_type, language):
