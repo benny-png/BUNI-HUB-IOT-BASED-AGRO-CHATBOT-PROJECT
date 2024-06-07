@@ -1,4 +1,3 @@
-Sure! Here's the updated README file with the correct Markdown syntax to display images:
 
 ---
 
