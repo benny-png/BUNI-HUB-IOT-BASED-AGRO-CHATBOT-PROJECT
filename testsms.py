@@ -61,8 +61,8 @@ def send_sms(api_url, username, password, phone_number, message):
 
 # Example usage
 api_url = "http://sms.reubenwedson.site/api/sms/v1/text/single"
-username = "fredygerman"
-password = "gafhy3-tEpxax-doqnuc"
+username = "SAMPLE"
+password = "SAMPLE"
 
 message = """
 Based on the provided data, here's an analysis of the conditions:
