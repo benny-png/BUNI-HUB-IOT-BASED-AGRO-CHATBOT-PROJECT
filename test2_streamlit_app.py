@@ -6,7 +6,9 @@ import streamlit as st
 import plotly.express as px
 import pandas as pd
 import threading
-from testsms import send_sms
+from lib.sms import send_sms
+import requests
+
 
 # Define your OpenAI API key
 openai_api_key = 'EXPAMPLE - KEY HERE'
@@ -30,79 +32,6 @@ def get_openai_response(prompt):
         return response.json()['choices'][0]['message']['content']
     else:
         raise Exception(f"OpenAI API request failed with status code {response.status_code}: {response.text}")
-
-# Function to send SMS using HSUPA modem
-#def send_smsNew(phone_number, message):
-#    try:
-#        # Replace 'COM3' with your modem's serial port
-#        ser = serial.Serial('COM3', baudrate=9600, timeout=5)
-#        
-#        # Give the modem some time to initialize
-#        time.sleep(1)
-#
-#        # Initialize the modem
-#        ser.write(b'AT\r')
-#        time.sleep(0.5)
-#        print(ser.read(ser.inWaiting()).decode())
-#
-#        # Set text mode
-#        ser.write(b'AT+CMGF=1\r')
-#        time.sleep(0.5)
-#        print(ser.read(ser.inWaiting()).decode())
-#
-#        # Set the phone number for SMS
-#        ser.write(f'AT+CMGS="{phone_number}"\r'.encode())
-#        time.sleep(0.5)
-#        print(ser.read(ser.inWaiting()).decode())
-#
-#        # Send the message text
-#        ser.write(f'{message}\x1A'.encode())
-#        time.sleep(0.5)
-#        print(ser.read(ser.inWaiting()).decode())
-#
-#        # Close the serial connection
-#        ser.close()
-#        
-#        print("SMS sent successfully!")
-#
-#    except Exception as e:
-#        print(f"Error: {e}")
-import requests
-from requests.auth import HTTPBasicAuth
-
-def send_post_request(url, username, password, body):
-    """
-    Sends a POST request with basic authentication.
-
-    :param url: The URL to send the POST request to.
-    :param username: The username for basic authentication.
-    :param password: The password for basic authentication.
-    :param body: The body of the POST request.
-    :return: The response from the server.
-    """
-    auth = HTTPBasicAuth(username, password)
-    headers = {'Content-Type': 'application/json'}
-
-    response = requests.post(url, auth=auth, json=body, headers=headers)
-    print(response)
-    return response
-
-def send_smsNew(api_url, username, password, phone_number, message):
-    # Example usage
-    api_url = "http://sms.reubenwedson.site/api/sms/v1/text/single"
-    username = "fredygerman"
-    password = "gafhy3-tEpxax-doqnuc"
-
-    response = send_sms(api_url, username, password, phone_number, message)
-
-    return response
-
-
-# Example usage
-api_url = "http://sms.reubenwedson.site/api/sms/v1/text/single"
-username = "fredygerman"
-password = "gafhy3-tEpxax-doqnuc"
-
 
 
 
@@ -167,7 +96,7 @@ def listen_for_sms():
                 if user_question:
                     try:
                         response = answer_user_question(user_question, predefined_data, crop_type, language)
-                        send_smsNew(api_url, username, password,phone_number, response)
+                        send_sms(api_url, username, password,phone_number, response)
                         
                     except Exception as e:
                         print(f"Error: {e}")
@@ -191,7 +120,7 @@ soil_moisture = st.number_input('Soil Moisture (%)', min_value=0, max_value=100,
 temperature = st.number_input('Temperature (°C)', min_value=-50, max_value=100, value=22)
 humidity = st.number_input('Humidity (%)', min_value=0, max_value=100, value=60)
 crop_type = st.text_input('Crop Type', value='maize')
-phone_number = st.text_input('Phone Number', value='+255745676696')
+phone_number = st.text_input('Phone Number', value='+255745676969')
 
 # Initial predefined sensor data
 predefined_data = {
@@ -219,11 +148,11 @@ if st.button('Get Recommendations'):
             st.write(response)
 
             api_url = "http://sms.reubenwedson.site/api/sms/v1/text/single"
-            username = "fredygerman"
-            password = "gafhy3-tEpxax-doqnuc"
+            username = "username"
+            password = "password"
             
             # Send the response via SMS
-            response2v = send_smsNew(api_url, username, password,phone_number, response)
+            response2v = send_sms(api_url, username, password,phone_number, response)
             st.success(f"SMS sent successfully!{response2v} in {phone_number}")
     except Exception as e:
         st.error(f"Error: {e}")
@@ -270,12 +199,9 @@ while True:
             response = get_openai_response(prompt)
             st.success("Response from OpenAI:")
             st.write(response)
-            api_url = "http://sms.reubenwedson.site/api/sms/v1/text/single"
-            username = "fredygerman"
-            password = "gafhy3-tEpxax-doqnuc"
-            
+          
             # Send the response via SMS
-            response2v = send_smsNew(api_url, username, password,phone_number, response)
+            response2v = send_sms(phone_number, response)
             st.success(f"SMS sent successfully!{response2v} in {phone_number}")
 
             # Update the bar chart with the new data
