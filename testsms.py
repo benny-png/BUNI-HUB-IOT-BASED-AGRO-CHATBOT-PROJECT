@@ -1,7 +1,7 @@
 
 #        print(f"Error: {e}")
 import requests
-import random
+import uuid
 from requests.auth import HTTPBasicAuth
 
 def send_post_request(url, username, password, body):
@@ -51,8 +51,7 @@ def send_sms(api_url, username, password, phone_number, message):
             "to": phone_number,
             "text": message[:150]
     ,
-            "reference": random.randint(0, 899889898)
-        
+            "reference": str(uuid.uuid4())
         }
         response = send_post_request(api_url, username, password, body)
 
